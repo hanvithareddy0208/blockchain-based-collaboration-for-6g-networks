@@ -1,0 +1,206 @@
+{% extends 'base.html' %}
+
+{% block title %}Welcome - 6G Blockchain System{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="mb-0">
+                        <i class="fas fa-hand-wave me-2"></i>Welcome to 6G Blockchain System, {{ user.first_name|default:user.username }}!
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <p class="lead">
+                        You have successfully registered for the 6G Blockchain System.
+                    </p>
+                    
+                    <div class="alert alert-info">
+                        <h5 class="alert-heading">
+                            <i class="fas fa-lock me-2"></i>Limited Access Account
+                        </h5>
+                        <p class="mb-0">
+                            Your account currently has limited access. This is a standard account for system users. 
+                            To access the admin dashboard and management features, an administrator must upgrade your account privileges.
+                        </p>
+                    </div>
+                    
+                    <h5 class="mt-4">
+                        <i class="fas fa-info-circle me-2"></i>Account Information
+                    </h5>
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <p><strong>Username:</strong> {{ user.username }}</p>
+                            <p><strong>Email:</strong> {{ user.email }}</p>
+                            {% if user.first_name or user.last_name %}
+                                <p><strong>Full Name:</strong> {{ user.first_name }} {{ user.last_name }}</p>
+                            {% endif %}
+                            <p><strong>Account Status:</strong> <span class="badge bg-success">Active</span></p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>User Type:</strong> Standard User</p>
+                            <p><strong>Account Created:</strong> {{ user.date_joined|date:"M d, Y" }}</p>
+                            <p><strong>Last Login:</strong> {{ user.last_login|date:"M d, Y H:i" }}</p>
+                        </div>
+                    </div>
+                    
+                    <hr>
+                    
+                    <h5 class="mt-4">
+                        <i class="fas fa-question-circle me-2"></i>What's Next?
+                    </h5>
+                    <ul class="list-group list-group-flush mt-3">
+                        <li class="list-group-item">
+                            <i class="fas fa-check me-2"></i>
+                            Your account has been successfully created and is active.
+                        </li>
+                        <li class="list-group-item">
+                            <i class="fas fa-star me-2 text-warning"></i>
+                            To access the admin dashboard, contact your system administrator.
+                        </li>
+                        <li class="list-group-item">
+                            <i class="fas fa-lock me-2"></i>
+                            Keep your login credentials secure and never share your password.
+                        </li>
+                        <li class="list-group-item">
+                            <i class="fas fa-envelope me-2 text-info"></i>
+                            Check your email for system announcements and updates.
+                        </li>
+                    </ul>
+                    
+                    <div class="mt-4">
+                        <a href="{% url 'login' %}" class="btn btn-primary">
+                            <i class="fas fa-arrow-left me-2"></i>Back to Login
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-user-circle me-2"></i>Account Menu
+                    </h5>
+                </div>
+                <div class="list-group list-group-flush">
+                    <a href="{% url 'admin:password_change' %}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-key me-2"></i>Change Password
+                    </a>
+                    <a href="{% url 'admin:logout' %}" class="list-group-item list-group-item-action">
+                        <i class="fas fa-sign-out-alt me-2"></i>Logout
+                    </a>
+                </div>
+            </div>
+            
+            <div class="card mt-3">
+                <div class="card-header">
+                    <h5 class="mb-0">
+                        <i class="fas fa-headset me-2"></i>Need Help?
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <p class="small text-muted">
+                        For technical support or to request admin access, please contact your system administrator.
+                    </p>
+                    <p class="small text-muted mb-0">
+                        <i class="fas fa-envelope me-1"></i>
+                        Email: admin@6gblockchain.local
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.list-group-item {
+    border: 1px solid var(--medium-gray);
+}
+
+.list-group-item-action:hover {
+    background-color: var(--light-gray) !important;
+}
+
+.card {
+    background-color: var(--primary-white);
+    border: 1px solid var(--medium-gray);
+}
+
+.card-header {
+    border-bottom: 1px solid var(--medium-gray);
+    background-color: var(--dark-white);
+}
+
+.text-primary {
+    color: var(--text-primary) !important;
+}
+
+.bg-success {
+    background-color: #198754 !important;
+    color: #ffffff !important;
+}
+
+.badge {
+    padding: 5px 10px;
+}
+
+.card {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+}
+
+.card-header {
+    background-color: #f5f5f5;
+    border-bottom: 1px solid #e0e0e0;
+    color: #000000;
+    font-weight: bold;
+}
+
+.card-body {
+    color: #000000;
+}
+
+.alert-info {
+    background-color: #d1ecf1;
+    border-color: #bee5eb;
+    color: #0c5460;
+}
+
+.list-group-item {
+    background-color: #ffffff;
+    border-color: #e0e0e0;
+    color: #000000;
+}
+
+.list-group-item-action:hover {
+    background-color: #f5f5f5;
+}
+
+.btn-primary {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+.btn-primary:hover {
+    background-color: #0b5ed7;
+    border-color: #0a58ca;
+}
+
+.text-dark {
+    color: #000000 !important;
+}
+
+.text-muted {
+    color: #666666 !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #000000;
+}
+</style>
+{% endblock %}

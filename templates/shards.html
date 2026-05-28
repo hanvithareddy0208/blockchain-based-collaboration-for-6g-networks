@@ -1,0 +1,442 @@
+{% extends 'base.html' %}
+
+{% block title %}Shard Management - 6G Blockchain System{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <!-- Page Header -->
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="display-6 text-dark">
+                <i class="fas fa-sitemap me-2"></i>Shard Management
+            </h1>
+            <p class="text-muted">Service-based, capacity-adaptive sharding framework</p>
+        </div>
+        <div class="col-auto">
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addShardModal">
+                <i class="fas fa-plus-circle me-2"></i>Create Shard
+            </button>
+        </div>
+    </div>
+
+    <!-- Shard Statistics -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <div class="card-body text-center">
+                    <h3 class="stat-number">4</h3>
+                    <p class="stat-label">Active Shards</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <div class="card-body text-center">
+                    <h3 class="stat-number">156</h3>
+                    <p class="stat-label">Total Nodes</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <div class="card-body text-center">
+                    <h3 class="stat-number">85%</h3>
+                    <p class="stat-label">Load Balanced</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <div class="card-body text-center">
+                    <h3 class="stat-number">7.8</h3>
+                    <p class="stat-label">Avg Reputation</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Shard Grid -->
+    <div class="row">
+        <!-- URLLC Shard -->
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card shard-card h-100" onclick="viewShardDetails('urllc')">
+                <div class="card-header bg-primary">
+                    <h5 class="mb-0">
+                        <i class="fas fa-bolt me-2"></i>URLLC Shard
+                    </h5>
+                    <small class="text-muted">Ultra-Reliable Low Latency</small>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>Nodes: <strong class="">42</strong></span>
+                        <span class="badge bg-success">High Rep</span>
+                    </div>
+                    <div class="mb-3">
+                        <small class="text-muted">Min Requirements:</small>
+                        <div class="d-flex justify-content-between">
+                            <small>Reputation: ≥8.0</small>
+                            <small>Capability: ≥8</small>
+                        </div>
+                    </div>
+                    <div class="progress mb-2" style="height: 8px;">
+                        <div class="progress-bar bg-success" style="width: 65%"></div>
+                    </div>
+                    <small class="text-muted">Load: 65% | TPS: 1,200</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- eMBB Shard -->
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card shard-card h-100" onclick="viewShardDetails('embb')">
+                <div class="card-header bg-info">
+                    <h5 class="mb-0">
+                        <i class="fas fa-tachometer-alt me-2"></i>eMBB Shard
+                    </h5>
+                    <small class="text-muted">Enhanced Mobile Broadband</small>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>Nodes: <strong class="">58</strong></span>
+                        <span class="badge bg-warning">Medium Rep</span>
+                    </div>
+                    <div class="mb-3">
+                        <small class="text-muted">Min Requirements:</small>
+                        <div class="d-flex justify-content-between">
+                            <small>Reputation: ≥6.0</small>
+                            <small>Capability: ≥6</small>
+                        </div>
+                    </div>
+                    <div class="progress mb-2" style="height: 8px;">
+                        <div class="progress-bar bg-info" style="width: 85%"></div>
+                    </div>
+                    <small class="text-muted">Load: 85% | TPS: 2,500</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- mIoT Shard -->
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card shard-card h-100" onclick="viewShardDetails('miot')">
+                <div class="card-header bg-warning">
+                    <h5 class="mb-0">
+                        <i class="fas fa-satellite-dish me-2"></i>mIoT Shard
+                    </h5>
+                    <small class="text-muted">Massive IoT</small>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>Nodes: <strong class="">38</strong></span>
+                        <span class="badge bg-secondary">Mixed Rep</span>
+                    </div>
+                    <div class="mb-3">
+                        <small class="text-muted">Min Requirements:</small>
+                        <div class="d-flex justify-content-between">
+                            <small>Reputation: ≥4.0</small>
+                            <small>Capability: ≥4</small>
+                        </div>
+                    </div>
+                    <div class="progress mb-2" style="height: 8px;">
+                        <div class="progress-bar bg-warning" style="width: 45%"></div>
+                    </div>
+                    <small class="text-muted">Load: 45% | TPS: 3,800</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- MEC Shard -->
+        <div class="col-lg-3 col-md-6 mb-4">
+            <div class="card shard-card h-100" onclick="viewShardDetails('mec')">
+                <div class="card-header bg-primary">
+                    <h5 class="mb-0">
+                        <i class="fas fa-cloud me-2"></i>MEC Shard
+                    </h5>
+                    <small class="text-muted">Multi-access Edge Computing</small>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>Nodes: <strong class="">18</strong></span>
+                        <span class="badge bg-success">High Rep</span>
+                    </div>
+                    <div class="mb-3">
+                        <small class="text-muted">Min Requirements:</small>
+                        <div class="d-flex justify-content-between">
+                            <small>Reputation: ≥7.0</small>
+                            <small>Capability: ≥7</small>
+                        </div>
+                    </div>
+                    <div class="progress mb-2" style="height: 8px;">
+                        <div class="progress-bar bg-primary" style="width: 60%"></div>
+                    </div>
+                    <small class="text-muted">Load: 60% | TPS: 900</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Shard Configuration -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-cog me-2"></i>Shard Configuration Rules
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h5 class="text-dark">Service-based Partitioning</h5>
+                            <ul class="list-unstyled">
+                                <li class="mb-2">
+                                    <i class="fas fa-check-circle text-dark me-2"></i>
+                                    Nodes grouped by service capability
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-check-circle text-dark me-2"></i>
+                                    Optimized transaction processing
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-check-circle text-dark me-2"></i>
+                                    Service-specific optimization
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-4">
+                            <h5 class="text-dark">Capacity Adaptation</h5>
+                            <ul class="list-unstyled">
+                                <li class="mb-2">
+                                    <i class="fas fa-check-circle text-dark me-2"></i>
+                                    Dynamic shard resizing
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-check-circle text-dark me-2"></i>
+                                    Load-based node allocation
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-check-circle text-dark me-2"></i>
+                                    Automatic rebalancing
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="col-md-4">
+                            <h5 class="text-dark">Performance Metrics</h5>
+                            <ul class="list-unstyled">
+                                <li class="mb-2">
+                                    <i class="fas fa-chart-line text-dark me-2"></i>
+                                    Transaction throughput
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-clock text-dark me-2"></i>
+                                    Latency monitoring
+                                </li>
+                                <li class="mb-2">
+                                    <i class="fas fa-balance-scale text-dark me-2"></i>
+                                    Load distribution
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function viewShardDetails(shardType) {
+    alert(`Viewing details for ${shardType.toUpperCase()} shard`);
+}
+</script>
+
+<!-- Add Shard Modal -->
+<div class="modal fade" id="addShardModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-dark"><i class="fas fa-plus-circle me-2"></i>Create Shard</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="addShardForm">
+                    <div class="mb-3">
+                        <label class="form-label text-dark">Shard ID</label>
+                        <input type="text" class="form-control" id="shardId" placeholder="e.g., SHARD-URLLC" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-dark">Name</label>
+                        <input type="text" class="form-control" id="shardName" placeholder="User-facing name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-dark">Service Type</label>
+                        <select class="form-select" id="serviceType" required>
+                            <option value="URLLC">URLLC</option>
+                            <option value="EMBB">eMBB</option>
+                            <option value="MIOT">mIoT</option>
+                            <option value="MEC">MEC</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-dark">Minimum Reputation</label>
+                        <input type="number" step="0.1" min="0" max="10" class="form-control" id="minReputation" value="3.0">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-dark">Minimum Capability</label>
+                        <input type="number" min="1" max="10" class="form-control" id="minCapability" value="3">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label text-dark">Description (optional)</label>
+                        <textarea class="form-control" id="shardDescription" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-top-0">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="addNewShard()">
+                    <i class="fas fa-save me-2"></i>Create Shard
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function addNewShard() {
+    const shardData = {
+        shard_id: $('#shardId').val(),
+        name: $('#shardName').val(),
+        service_type: $('#serviceType').val(),
+        minimum_reputation: parseFloat($('#minReputation').val()),
+        minimum_capability: parseInt($('#minCapability').val()),
+        description: $('#shardDescription').val()
+    };
+
+    if (!shardData.shard_id || !shardData.name) {
+        alert('Shard ID and Name are required');
+        return;
+    }
+
+    $.ajax({
+        url: '/api/shard-create/',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(shardData),
+        success: function(res) {
+            if (res.status === 'success') {
+                // close modal and refresh
+                $('#addShardModal').modal('hide');
+                $('#addShardForm')[0].reset();
+                showNotification('Shard created successfully', 'success');
+                // simple action: reload page to show new shard
+                setTimeout(() => location.reload(), 600);
+            } else {
+                showNotification(res.message || 'Error creating shard', 'error');
+            }
+        },
+        error: function(xhr) {
+            showNotification('Error creating shard', 'error');
+        }
+    });
+}
+</script>
+
+<style>
+.shard-card {
+    cursor: pointer;
+    transition: transform 0.3s, box-shadow 0.3s;
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+}
+
+.shard-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.card {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+}
+
+.card-header {
+    background-color: #f5f5f5;
+    border-bottom: 2px solid #0d6efd;
+    color: #000000;
+    font-weight: bold;
+}
+
+.card-body {
+    color: #000000;
+}
+
+.stat-card {
+    border-left: 4px solid #0d6efd;
+    background-color: #ffffff;
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #000000;
+}
+
+.stat-label {
+    color: #666666;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+}
+
+.bg-primary {
+    background-color: #0d6efd !important;
+    color: #ffffff !important;
+}
+
+.bg-info {
+    background-color: #0dcaf0 !important;
+    color: #000000 !important;
+}
+
+.bg-warning {
+    background-color: #ffc107 !important;
+    color: #000000 !important;
+}
+
+.bg-danger {
+    background-color: #dc3545 !important;
+    color: #ffffff !important;
+}
+
+.bg-success {
+    background-color: #198754 !important;
+    color: #ffffff !important;
+}
+
+.bg-secondary {
+    background-color: #6c757d !important;
+    color: #ffffff !important;
+}
+
+.text-dark {
+    color: #000000 !important;
+}
+
+.text-muted {
+    color: #666666 !important;
+}
+
+.list-group-item {
+    background-color: #ffffff;
+    border-color: #e0e0e0;
+    color: #000000;
+}
+
+.list-group-item:hover {
+    background-color: #f5f5f5;
+}
+
+.progress {
+    background-color: #e9ecef;
+}
+</style>
+</style>
+{% endblock %}

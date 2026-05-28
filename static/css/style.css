@@ -1,0 +1,395 @@
+/* 6G Blockchain System - Clean White & Black Theme */
+
+:root {
+    --primary-white: #ffffff;
+    --dark-white: #f8f9fa;
+    --light-gray: #e9ecef;
+    --medium-gray: #dee2e6;
+    --dark-gray: #495057;
+    --text-primary: #000000;
+    --text-secondary: #333333;
+    --text-muted: #666666;
+    --border-color: #cccccc;
+}
+
+body {
+    background-color: var(--primary-white);
+    color: var(--text-primary);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    min-height: 100vh;
+}
+
+/* Text and Background Color Classes */
+.text-dark {
+    color: var(--text-primary) !important;
+}
+
+.bg-white {
+    background-color: var(--primary-white) !important;
+}
+
+.bg-light {
+    background-color: var(--dark-white) !important;
+}
+
+.text-muted {
+    color: var(--text-muted) !important;
+}
+
+.text-secondary {
+    color: var(--text-secondary) !important;
+}
+
+/* Container styling */
+.container-fluid {
+    padding: 2rem;
+    background-color: var(--primary-white);
+}
+
+/* Better text contrast */
+p {
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: var(--text-primary);
+    font-weight: 600;
+}
+
+/* Navigation */
+.navbar {
+    background-color: var(--dark-white) !important;
+    border-bottom: 2px solid var(--text-primary);
+}
+
+.navbar-brand {
+    color: var(--text-primary) !important;
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+.nav-link {
+    color: var(--text-secondary) !important;
+    transition: color 0.3s;
+}
+
+.nav-link:hover, .nav-link.active {
+    color: var(--text-primary) !important;
+}
+
+.nav-text {
+    color: var(--text-secondary) !important;
+}
+
+.nav-text {
+    color: var(--text-secondary) !important;
+}
+
+/* Links */
+a {
+    color: var(--text-primary);
+    text-decoration: none;
+}
+
+a:hover {
+    color: var(--text-secondary);
+    text-decoration: underline;
+}
+
+/* Cards */
+.card {
+    background-color: var(--primary-white);
+    border: 1px solid var(--medium-gray);
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    transition: all 0.3s ease;
+}
+
+.card-header {
+    background-color: var(--dark-white);
+    border-bottom: 2px solid var(--text-primary);
+    color: var(--text-primary);
+    font-weight: bold;
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: var(--text-primary);
+    border-color: var(--text-primary);
+    color: var(--primary-white);
+    font-weight: bold;
+}
+
+.btn-primary:hover {
+    background-color: var(--text-secondary);
+    border-color: var(--text-secondary);
+    color: var(--primary-white);
+}
+
+.btn-outline-primary {
+    border-color: var(--text-primary);
+    color: var(--text-primary);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--text-primary);
+    border-color: var(--text-primary);
+    color: var(--primary-white);
+}
+
+/* Stats Cards */
+.stat-card {
+    background: linear-gradient(135deg, var(--dark-white), var(--light-gray));
+    border-left: 4px solid var(--text-primary);
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.stat-label {
+    color: var(--text-muted);
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+}
+
+/* Tables */
+.table {
+    background-color: var(--primary-white);
+    color: var(--text-primary);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table thead th {
+    background-color: var(--dark-white);
+    border-bottom: 2px solid var(--text-primary);
+    color: var(--text-primary);
+    font-weight: bold;
+}
+
+.table tbody tr {
+    border-bottom: 1px solid var(--medium-gray);
+}
+
+.table tbody tr:hover {
+    background-color: var(--light-gray);
+}
+
+/* Progress Bars */
+.progress {
+    background-color: var(--light-gray);
+    border-radius: 10px;
+    height: 8px;
+}
+
+.progress-bar {
+    background-color: var(--text-primary);
+}
+
+/* Badges */
+.badge {
+    font-weight: normal;
+    padding: 5px 10px;
+    border-radius: 12px;
+}
+
+.badge-success {
+    background-color: #28a745 !important;
+    color: #ffffff !important;
+}
+
+.badge-info {
+    background-color: #e7f3ff;
+    color: #004085;
+}
+
+.badge-warning {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.badge-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+/* Forms */
+.form-control, .form-select {
+    background-color: var(--primary-white);
+    border: 1px solid var(--medium-gray);
+    color: var(--text-primary);
+    padding: 0.75rem;
+}
+
+.form-control:focus, .form-select:focus {
+    background-color: var(--primary-white);
+    border-color: var(--text-primary);
+    color: var(--text-primary);
+    box-shadow: 0 0 0 0.25rem rgba(0, 0, 0, 0.1);
+}
+
+.form-label {
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
+::placeholder {
+    color: var(--text-muted);
+}
+
+/* Alerts */
+.alert {
+    background-color: var(--light-gray);
+    border: 1px solid var(--medium-gray);
+    color: var(--text-primary);
+    border-radius: 8px;
+}
+
+.alert-success {
+    border-color: #28a745;
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.alert-danger {
+    border-color: #dc3545;
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.alert-warning {
+    border-color: #ffc107;
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.alert-info {
+    border-color: #17a2b8;
+    background-color: #d1ecf1;
+    color: #0c5460;
+}
+
+/* Animations */
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.7; }
+    100% { opacity: 1; }
+}
+
+.pulse {
+    animation: pulse 2s infinite;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.animate-slide {
+    animation: slideIn 0.3s ease-out;
+}
+
+/* Node Status Indicators */
+.status-indicator {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+.status-active {
+    background-color: #28a745;
+    box-shadow: 0 0 10px #28a745;
+}
+
+.status-inactive {
+    background-color: var(--text-muted);
+}
+
+.status-suspended {
+    background-color: #dc3545;
+}
+
+/* Shard Cards */
+.shard-card {
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+}
+
+.shard-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Transaction Visualization */
+.transaction-flow {
+    position: relative;
+    padding: 20px;
+}
+
+.transaction-node {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: var(--light-gray);
+    border: 2px solid var(--text-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-primary);
+    font-weight: bold;
+}
+
+.transaction-line {
+    height: 2px;
+    background: linear-gradient(90deg, var(--text-primary), transparent);
+    flex-grow: 1;
+    margin: 0 10px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .stat-number {
+        font-size: 2rem;
+    }
+    
+    .card {
+        margin-bottom: 1rem;
+    }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--dark-white);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--text-primary);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--text-secondary);
+}

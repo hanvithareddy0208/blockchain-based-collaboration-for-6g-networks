@@ -1,0 +1,710 @@
+{% extends 'base.html' %}
+
+{% block title %}Consensus Monitor - 6G Blockchain System{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <!-- Page Header -->
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="display-6 text-dark">
+                <i class="fas fa-sync-alt me-2"></i>Consensus Monitor
+            </h1>
+            <p class="text-muted">Load-Sensitive PBFT Consensus Mechanism</p>
+        </div>
+        <div class="col-auto">
+            <button class="btn btn-outline-primary" onclick="refreshConsensusData()">
+                <i class="fas fa-sync-alt me-2"></i>Refresh
+            </button>
+        </div>
+    </div>
+
+    {% if error %}
+    <div class="alert alert-danger">
+        <i class="fas fa-exclamation-triangle me-2"></i>
+        <strong>System Configuration Required:</strong> {{ error }}
+        <br>
+        <small>Please run migrations or check the database configuration.</small>
+    </div>
+    {% endif %}
+
+    <!-- Consensus Stats -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <div class="card-body text-center">
+                    <h3 class="stat-number" id="activeRounds">0</h3>
+                    <p class="stat-label">Active Rounds</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <div class="card-body text-center">
+                    <h3 class="stat-number">48ms</h3>
+                    <p class="stat-label">Avg Latency</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <div class="card-body text-center">
+                    <h3 class="stat-number">99.7%</h3>
+                    <p class="stat-label">Success Rate</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <div class="card-body text-center">
+                    <h3 class="stat-number">1250</h3>
+                    <p class="stat-label">TPS</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Active Consensus Rounds -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-play-circle me-2"></i>Active Consensus Rounds
+                </div>
+                <div class="card-body">
+                    <div id="activeRoundsContainer">
+                        <!-- Content will be loaded via JavaScript -->
+                        <div class="text-center py-5">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <p class="mt-2">Loading consensus data...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Consensus History -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-history me-2"></i>Recent Consensus History
+                </div>
+                <div class="card-body">
+                    <div id="consensusHistoryContainer">
+                        <!-- Content will be loaded via JavaScript -->
+                        <div class="text-center py-5">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <p class="mt-2">Loading consensus history...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PBFT Consensus Information -->
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-header">
+                    <i class="fas fa-info-circle me-2"></i>PBFT Consensus Phases
+                </div>
+                <div class="card-body">
+                    <div class="pbft-timeline">
+                        <div class="pbft-phase phase-1 active">
+                            <div class="phase-number">1</div>
+                            <div class="phase-info">
+                                <h6 class="text-dark">Pre-prepare</h6>
+                                <p class="small text-muted">Leader sends proposal to all replicas</p>
+                            </div>
+                        </div>
+                        <div class="pbft-phase phase-2">
+                            <div class="phase-number">2</div>
+                            <div class="phase-info">
+                                <h6 class="text-dark">Prepare</h6>
+                                <p class="small text-muted">Replicas send prepare messages</p>
+                            </div>
+                        </div>
+                        <div class="pbft-phase phase-3">
+                            <div class="phase-number">3</div>
+                            <div class="phase-info">
+                                <h6 class="text-dark">Commit</h6>
+                                <p class="small text-muted">Replicas send commit messages</p>
+                            </div>
+                        </div>
+                        <div class="pbft-phase phase-4">
+                            <div class="phase-number">4</div>
+                            <div class="phase-info">
+                                <h6 class="text-dark">Reply</h6>
+                                <p class="small text-muted">Replicas reply to clients</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-header">
+                    <i class="fas fa-chart-line me-2"></i>Load-Sensitive Adaptation
+                </div>
+                <div class="card-body">
+                    <canvas id="loadAdaptationChart" height="200"></canvas>
+                    <div class="mt-3">
+                        <h6 class="text-dark">Dynamic Parameters</h6>
+                        <ul class="list-unstyled">
+                            <li class="mb-2">
+                                <i class="fas fa-adjust text-dark me-2"></i>
+                                <strong>Batch Size:</strong> Adjusts based on network load
+                            </li>
+                            <li class="mb-2">
+                                <i class="fas fa-clock text-dark me-2"></i>
+                                <strong>Timeout:</strong> Increases with higher load
+                            </li>
+                            <li class="mb-2">
+                                <i class="fas fa-users text-dark me-2"></i>
+                                <strong>Leader Rotation:</strong> Faster under high load
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Consensus Configuration -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fas fa-cog me-2"></i>Consensus Configuration
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h6 class="text-dark">Load Thresholds</h6>
+                            <div class="mb-3">
+                                <label class="form-label">Low Load (< 30%)</label>
+                                <input type="range" class="form-range" value="20" disabled>
+                                <small class="text-muted">Batch Size: 20, Timeout: 5s</small>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Medium Load (30-70%)</label>
+                                <input type="range" class="form-range" value="50" disabled>
+                                <small class="text-muted">Batch Size: 10, Timeout: 7s</small>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">High Load (> 70%)</label>
+                                <input type="range" class="form-range" value="85" disabled>
+                                <small class="text-muted">Batch Size: 5, Timeout: 10s</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <h6 class="text-dark">Fault Tolerance</h6>
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between">
+                                    <span>Maximum Faulty Nodes (f):</span>
+                                    <span class="">1</span>
+                                </div>
+                                <div class="progress" style="height: 6px;">
+                                    <div class="progress-bar bg-success" style="width: 33%"></div>
+                                </div>
+                                <small class="text-muted">Can tolerate 1 faulty node out of 3</small>
+                            </div>
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between">
+                                    <span>Quorum Size (2f+1):</span>
+                                    <span class="">3</span>
+                                </div>
+                                <small class="text-muted">Required for consensus decisions</small>
+                            </div>
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between">
+                                    <span>View Change Timeout:</span>
+                                    <span class="">30s</span>
+                                </div>
+                                <small class="text-muted">Timeout for view changes</small>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <h6 class="text-dark">Performance Metrics</h6>
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between">
+                                    <span>Average Latency:</span>
+                                    <span class="">48ms</span>
+                                </div>
+                                <div class="progress" style="height: 6px;">
+                                    <div class="progress-bar bg-info" style="width: 48%"></div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between">
+                                    <span>Throughput (TPS):</span>
+                                    <span class="">1,250</span>
+                                </div>
+                                <div class="progress" style="height: 6px;">
+                                    <div class="progress-bar bg-success" style="width: 78%"></div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between">
+                                    <span>Success Rate:</span>
+                                    <span class="">99.7%</span>
+                                </div>
+                                <div class="progress" style="height: 6px;">
+                                    <div class="progress-bar bg-success" style="width: 99.7%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+$(document).ready(function() {
+    initializeConsensusCharts();
+    loadConsensusData();
+    
+    // Auto-refresh every 10 seconds
+    setInterval(loadConsensusData, 10000);
+});
+
+function initializeConsensusCharts() {
+    // Load Adaptation Chart
+    const loadCtx = document.getElementById('loadAdaptationChart');
+    if (loadCtx) {
+        new Chart(loadCtx.getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: ['00:00', '04:00', '08:00', '12:00', '16:00', '20:00'],
+                datasets: [{
+                    label: 'Network Load',
+                    data: [25, 45, 65, 85, 70, 55],
+                    borderColor: '#0d6efd',
+                    backgroundColor: 'rgba(13, 110, 253, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }, {
+                    label: 'Batch Size',
+                    data: [20, 15, 10, 5, 8, 12],
+                    borderColor: '#198754',
+                    backgroundColor: 'rgba(25, 135, 84, 0.1)',
+                    tension: 0.4,
+                    fill: false
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: '#000000'
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.1)'
+                        },
+                        ticks: {
+                            color: '#333333'
+                        }
+                    },
+                    y: {
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.1)'
+                        },
+                        ticks: {
+                            color: '#333333'
+                        }
+                    }
+                }
+            }
+        });
+    }
+}
+
+function loadConsensusData() {
+    // Load active rounds
+    loadActiveRounds();
+    
+    // Load consensus history
+    loadConsensusHistory();
+}
+
+function loadActiveRounds() {
+    $.ajax({
+        url: '/api/consensus/active-rounds/',
+        method: 'GET',
+        success: function(data) {
+            if (data.status === 'success') {
+                $('#activeRounds').text(data.count);
+                updateActiveRoundsUI(data.rounds || generateMockActiveRounds());
+            } else {
+                updateActiveRoundsUI(generateMockActiveRounds());
+            }
+        },
+        error: function() {
+            updateActiveRoundsUI(generateMockActiveRounds());
+        }
+    });
+}
+
+function loadConsensusHistory() {
+    $.ajax({
+        url: '/api/consensus/history/',
+        method: 'GET',
+        success: function(data) {
+            if (data.status === 'success') {
+                updateConsensusHistoryUI(data.history || generateMockHistory());
+            } else {
+                updateConsensusHistoryUI(generateMockHistory());
+            }
+        },
+        error: function() {
+            updateConsensusHistoryUI(generateMockHistory());
+        }
+    });
+}
+
+function generateMockActiveRounds() {
+    return [
+        {
+            id: 1,
+            round_number: 1001,
+            shard_name: 'URLLC',
+            leader: 'Node-EDGE-001',
+            status: 'PRE_PREPARE',
+            load_factor: 0.65,
+            batch_size: 10,
+            start_time: new Date().toISOString()
+        },
+        {
+            id: 2,
+            round_number: 1002,
+            shard_name: 'eMBB',
+            leader: 'Node-CORE-005',
+            status: 'PREPARE',
+            load_factor: 0.85,
+            batch_size: 5,
+            start_time: new Date(Date.now() - 30000).toISOString()
+        }
+    ];
+}
+
+function generateMockHistory() {
+    const history = [];
+    const now = new Date();
+    
+    for (let i = 0; i < 10; i++) {
+        history.push({
+            id: i + 1,
+            round_number: 1000 - i,
+            shard_name: ['URLLC', 'eMBB', 'mIoT', 'MEC'][i % 4],
+            leader: `Node-${['EDGE', 'CORE', 'IOT', 'USER'][i % 4]}-${String(i+1).padStart(3, '0')}`,
+            status: 'DECIDED',
+            load_factor: 0.3 + Math.random() * 0.6,
+            batch_size: [20, 10, 5, 15][i % 4],
+            start_time: new Date(now.getTime() - (i * 60000)).toISOString(),
+            end_time: new Date(now.getTime() - (i * 60000) + 5000).toISOString(),
+            duration: '5s'
+        });
+    }
+    
+    return history;
+}
+
+function updateActiveRoundsUI(rounds) {
+    const container = $('#activeRoundsContainer');
+    
+    if (!rounds || rounds.length === 0) {
+        container.html(`
+            <div class="text-center py-5">
+                <i class="fas fa-sync fa-3x text-muted mb-3"></i>
+                <p class="text-muted">No active consensus rounds</p>
+            </div>
+        `);
+        return;
+    }
+    
+    let html = '<div class="table-responsive"><table class="table table-hover mb-0"><thead><tr>' +
+               '<th>Round ID</th><th>Shard</th><th>Leader</th><th>Status</th><th>Load Factor</th><th>Batch Size</th><th>Duration</th><th>Actions</th>' +
+               '</tr></thead><tbody>';
+    
+    rounds.forEach(round => {
+        const statusBadge = getStatusBadge(round.status);
+        const duration = round.start_time ? 
+            `${Math.floor((new Date() - new Date(round.start_time)) / 1000)}s` : 
+            'Running...';
+        
+        html += `
+            <tr>
+                <td>
+                    <strong class="">#${round.round_number}</strong>
+                    <br><small>${formatTimeAgo(round.start_time)}</small>
+                </td>
+                <td><span class="badge bg-info">${round.shard_name}</span></td>
+                <td><small>${round.leader}</small></td>
+                <td>${statusBadge}</td>
+                <td>
+                    <div class="progress" style="height: 6px;">
+                        <div class="progress-bar ${getLoadColor(round.load_factor)}" 
+                             style="width: ${round.load_factor * 100}%">
+                        </div>
+                    </div>
+                    <small>${round.load_factor.toFixed(2)}</small>
+                </td>
+                <td><span class="badge bg-secondary">${round.batch_size}</span></td>
+                <td><small>${duration}</small></td>
+                <td>
+                    <button class="btn btn-sm btn-outline-primary" 
+                            onclick="viewRoundDetails(${round.round_number})">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </td>
+            </tr>
+        `;
+    });
+    
+    html += '</tbody></table></div>';
+    container.html(html);
+}
+
+function updateConsensusHistoryUI(history) {
+    const container = $('#consensusHistoryContainer');
+    
+    if (!history || history.length === 0) {
+        container.html(`
+            <div class="text-center py-5">
+                <i class="fas fa-history fa-3x text-muted mb-3"></i>
+                <p class="text-muted">No consensus history available</p>
+            </div>
+        `);
+        return;
+    }
+    
+    let html = '<div class="table-responsive"><table class="table table-hover mb-0"><thead><tr>' +
+               '<th>Round ID</th><th>Shard</th><th>Leader</th><th>Status</th><th>Start Time</th><th>Duration</th><th>Load</th>' +
+               '</tr></thead><tbody>';
+    
+    history.forEach(round => {
+        const statusBadge = round.status === 'DECIDED' ? 
+            '<span class="badge bg-success">Success</span>' : 
+            '<span class="badge bg-danger">Failed</span>';
+        
+        html += `
+            <tr>
+                <td>#${round.round_number}</td>
+                <td>${round.shard_name}</td>
+                <td><small>${round.leader}</small></td>
+                <td>${statusBadge}</td>
+                <td>${formatTime(round.start_time)}</td>
+                <td>${round.duration || 'N/A'}</td>
+                <td>
+                    <span class="badge ${getLoadColor(round.load_factor)}">
+                        ${round.load_factor.toFixed(2)}
+                    </span>
+                </td>
+            </tr>
+        `;
+    });
+    
+    html += '</tbody></table></div>';
+    container.html(html);
+}
+
+function getStatusBadge(status) {
+    const badges = {
+        'PRE_PREPARE': 'bg-primary',
+        'PREPARE': 'bg-warning',
+        'COMMIT': 'bg-success',
+        'DECIDED': 'bg-success'
+    };
+    
+    const labels = {
+        'PRE_PREPARE': 'Pre-prepare',
+        'PREPARE': 'Prepare',
+        'COMMIT': 'Commit',
+        'DECIDED': 'Decided'
+    };
+    
+    return `<span class="badge ${badges[status] || 'bg-secondary'}">${labels[status] || status}</span>`;
+}
+
+function getLoadColor(load) {
+    if (load < 0.3) return 'bg-success';
+    if (load < 0.7) return 'bg-warning';
+    return 'bg-danger';
+}
+
+function formatTimeAgo(timestamp) {
+    if (!timestamp) return 'Just now';
+    const seconds = Math.floor((new Date() - new Date(timestamp)) / 1000);
+    
+    if (seconds < 60) return `${seconds}s ago`;
+    if (seconds < 3600) return `${Math.floor(seconds / 60)}m ago`;
+    return `${Math.floor(seconds / 3600)}h ago`;
+}
+
+function formatTime(timestamp) {
+    if (!timestamp) return 'N/A';
+    const date = new Date(timestamp);
+    return date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+}
+
+function refreshConsensusData() {
+    showNotification('Refreshing consensus data...', 'info');
+    loadConsensusData();
+}
+
+function viewRoundDetails(roundNumber) {
+    alert(`Viewing details for consensus round #${roundNumber}\n\nThis feature will be implemented with real data when the database is properly configured.`);
+}
+
+function showNotification(message, type) {
+    const alertClass = {
+        'success': 'alert-success',
+        'error': 'alert-danger',
+        'warning': 'alert-warning',
+        'info': 'alert-info'
+    }[type] || 'alert-info';
+    
+    const alertHtml = `
+        <div class="alert ${alertClass} alert-dismissible fade show" role="alert">
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    `;
+    
+    $('#notifications').prepend(alertHtml);
+    
+    setTimeout(() => {
+        $('.alert').first().alert('close');
+    }, 5000);
+}
+</script>
+
+<style>
+.pbft-timeline {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+}
+
+.pbft-timeline::before {
+    content: '';
+    position: absolute;
+    top: 25px;
+    left: 25px;
+    right: 25px;
+    height: 3px;
+    background-color: #0d6efd;
+    z-index: 1;
+}
+
+.pbft-phase {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+}
+
+.pbft-phase.active .phase-number {
+    background-color: #0d6efd;
+    color: #ffffff;
+}
+
+.phase-number {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #f0f0f0;
+    border: 3px solid #0d6efd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: #000000;
+    margin-bottom: 10px;
+}
+
+.phase-info {
+    text-align: center;
+}
+
+.stat-card {
+    border-left: 4px solid #0d6efd;
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #000000;
+}
+
+.stat-label {
+    color: #666666;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+}
+
+.card {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+}
+
+.card-header {
+    background-color: #f5f5f5;
+    border-bottom: 2px solid #0d6efd;
+    color: #000000;
+    font-weight: bold;
+}
+
+.table {
+    background-color: #ffffff;
+    color: #000000;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table thead th {
+    background-color: #f5f5f5;
+    border-bottom: 2px solid #0d6efd;
+    color: #000000;
+    font-weight: bold;
+}
+
+.table tbody tr {
+    border-bottom: 1px solid var(--medium-gray);
+}
+
+.table tbody tr:hover {
+    background-color: var(--light-gray);
+}
+
+.text-green {
+    color: var(--text-primary) !important;
+}
+
+.bg-success { background-color: #d4edda !important; color: #155724; }
+.bg-warning { background-color: #fff3cd !important; color: #856404; }
+.bg-danger { background-color: #f8d7da !important; color: #721c24; }
+.bg-primary { background-color: #d1ecf1 !important; color: #0c5460; }
+.bg-info { background-color: #d1ecf1 !important; color: #0c5460; }
+.bg-secondary { background-color: #e2e3e5 !important; color: #383d41; }
+</style>
+{% endblock %}
